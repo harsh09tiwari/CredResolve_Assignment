@@ -1,8 +1,10 @@
 import express from 'express';
-import { createGroup, getGroupBalance } from '../controllers/group.controller.js'; // Note .js
+import { createGroup, getAllGroups, getGroupBalance, getGroupMembers } from '../controllers/group.controller.js'; // Note .js
 
 const router = express.Router();
-router.post('/groups', createGroup);
-router.get('/groups/:groupId/balance', getGroupBalance);
+router.get('/', getAllGroups);
+router.post('/create', createGroup);
+router.get('/id/:groupId/balance', getGroupBalance);
+router.get('/id/:groupId/members', getGroupMembers);
 
 export default router;

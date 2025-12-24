@@ -40,3 +40,44 @@ export const addExpense = async (req, res) => {
         connection.release();
     }
 };
+
+
+export const settleDues = async (req, res) => {
+    const { groupId, payerId, receiverId, amount } = req.body;
+
+    const connection = await db.getConnection();
+
+    try {
+        await connection.beginTransaction();
+
+        const [group] = await connection.query('SELECT * FROM expense_groups WHERE id = ?', [groupId]);
+        if (group.length === 0) throw new Error('Group not found');
+
+        const description = 'Settlement';
+        const [expenseResult] = await connection.query(
+            'INSERT INTO expenses (group_id, payer_id, description, amount, split_type) VALUES (?, ?, ?, ?, ?)',
+            [groupId, payerId, description, amount, 'EXACT']
+        );
+
+        const expenseId = expenseResult.insertId;
+        
+        await connection.query(
+            'INSERT INTO expense_splits (expense_id, user_id, amount_owed) VALUES (?, ?, ?)',
+            [expenseId, receiverId, amount]
+        );
+
+        await connection.commit();
+
+        res.status(201).json({ 
+            message: 'Settlement recorded successfully', 
+            expenseId 
+        });
+
+    } catch (error) {
+        await connection.rollback();
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    } finally {
+        connection.release();
+    }
+};

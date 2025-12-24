@@ -1,7 +1,8 @@
 import express from 'express';
-import { addExpense } from '../controllers/expense.controller.js'; // Note .js
+import { addExpense, settleDues } from '../controllers/expense.controller.js'; // Note .js
 
 const router = express.Router();
-router.post('/expenses', addExpense);
+router.post('/addExpense', addExpense);
+router.post('/settleExpense', settleDues);
 
 export default router;
