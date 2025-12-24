@@ -76,7 +76,22 @@
 					"name": "Get Group Members",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/groups/id/1/members",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"groups",
+								"id",
+								"1",
+								"members"
+							]
+						}
 					},
 					"response": []
 				},
